@@ -9,10 +9,29 @@ load("//third_party:versions.bzl", "HTTP_DEPENDENCY_VERSIONS", "get_maven_depend
 # Android SDK configuration. For more details, see:
 # https://docs.bazel.build/versions/master/be/android.html#android_sdk_repository
 # TODO(#1542): Sync Android SDK version with the manifest.
+
+load("@bazel_tools//tools/android:universal_android_sdk_repository.bzl", "universal_android_sdk_repository")
+
 android_sdk_repository(
+    name = "androidsdk_linux",
+    api_level = 30,
+    build_tools_version = "30.0.3",
+    path = "/Users/tjgq/proj/android_sdk_linux",
+)
+
+android_sdk_repository(
+    name = "androidsdk_macos",
+    api_level = 30,
+    build_tools_version = "30.0.3",
+    path = "/Users/tjgq/proj/android_sdk_macos",
+)
+
+universal_android_sdk_repository(
     name = "androidsdk",
     api_level = 30,
     build_tools_version = "30.0.3",
+    linux_repo = "androidsdk_linux",
+    darwin_repo = "androidsdk_macos",
 )
 
 # Add support for JVM rules: https://github.com/bazelbuild/rules_jvm_external
@@ -193,6 +212,6 @@ http_archive(
 load("@bazelci_rules//:rbe_repo.bzl", "rbe_preconfig")
 
 rbe_preconfig(
-    name = "rbe_ubuntu1804_java11",
-    toolchain = "ubuntu1804-bazel-java11",
+   name = "rbe_ubuntu1804_java11",
+   toolchain = "ubuntu1804-bazel-java11",
 )

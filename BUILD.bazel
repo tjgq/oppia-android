@@ -138,12 +138,34 @@ package_group(
 
 # RBE support
 
+#platform(
+#    name = "rbe_ubuntu1804_java11_platform",
+#    exec_properties = {
+#        "dockerNetwork": "standard",
+#        "dockerPrivileged": "true",
+#        "Pool": "testing",
+#    },
+#    parents = ["@rbe_ubuntu1804_java11//config:platform"],
+#)
+
+# Universal toolchain
+
 platform(
-    name = "rbe_ubuntu1804_java11_platform",
-    exec_properties = {
-        "dockerNetwork": "standard",
-        "dockerPrivileged": "true",
-        "Pool": "testing",
-    },
-    parents = ["@rbe_ubuntu1804_java11//config:platform"],
+  name = "exec_platform",
+  constraint_values = ["@platforms//:universal"],
+  exec_properties = {
+    "container-image": "docker://gcr.io/bazel-public/ubuntu1804-bazel-java11@sha256:2d50853a7edbe59a99bc4141d7a03cb1068157b9766077302b46c4ec94eef151",
+    "OSFamily": "Linux",
+    "dockerNetwork": "standard",
+    "dockerPrivileged": "true",
+    "Pool": "testing",
+  },
+)
+
+platform(
+  name = "target_platform",
+  constraint_values = [
+    "@platforms//os:linux",
+    "@platforms//cpu:x86_64",
+  ],
 )
