@@ -14,6 +14,10 @@ build:linux --sandbox_tmpfs_path=/tmp
 # Work around Java issues in Oppia
 build --incompatible_java_common_parameters=false
 
+# Work around singlejar incompatibility with RBE
+# https://cs.opensource.google/bazel/bazel/+/master:src/tools/singlejar/singlejar_main.cc;l=24
+build --noexperimental_check_desugar_deps
+
 # Harmonize local and remote execution environment
 build --define=EXECUTOR=remote
 build --action_env=PATH=/bin:/usr/bin:/usr/local/bin
@@ -25,11 +29,22 @@ build:remote --remote_executor=grpcs://remotebuildexecution.googleapis.com
 build:remote --remote_timeout=600
 build:remote --remote_download_minimal
 build:remote --google_default_credentials
-build:remote --java_runtime_version=rbe_jdk
-build:remote --tool_java_runtime_version=rbe_jdk
-build:remote --extra_toolchains=@rbe_ubuntu1804_java11//java:all
-build:remote --crosstool_top=@rbe_ubuntu1804_java11//cc:toolchain
-build:remote --extra_toolchains=@rbe_ubuntu1804_java11//config:cc-toolchain
-build:remote --extra_execution_platforms=//:rbe_ubuntu1804_java11_platform
-build:remote --host_platform=//:rbe_ubuntu1804_java11_platform
-build:remote --platforms=//:rbe_ubuntu1804_java11_platform
+
+# Universal toolchain
+build --incompatible_enable_cc_toolchain_resolution
+build --host_platform=//:exec_platform
+build --platforms=//:target_platform
+
+# Dynamic execution
+build:remote --internal_spawn_scheduler
+build:remote --spawn_strategy=dynamic
+
+# C++ can't build/run locally
+build:remote --strategy=CppCompile=remote
+build:remote --strategy=CppLink=remote
+build:remote --strategy=CppArchive=remote
+build:remote --strategy=GenProto=remote
+build:remote --strategy=GenerateBinaryProtoFromText=remote
+
+# DexMerger uses nested artifacts which are incompatible with BwoB
+build:remote --strategy=DexMerger=remote
