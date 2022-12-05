@@ -7,6 +7,12 @@ build --android_databinding_use_v3_4_args \
 # Show all test output by default (for better debugging).
 test --test_output=all
 
+# Extra debugging
+build --sandbox_debug
+build --verbose_failures
+build --execution_log_json_file=/tmp/json
+build --profile=/tmp/prof
+
 # Work around https://github.com/bazelbuild/bazel/issues/3236
 common --enable_platform_specific_config
 build:linux --sandbox_tmpfs_path=/tmp
