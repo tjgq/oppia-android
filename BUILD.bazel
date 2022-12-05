@@ -135,3 +135,15 @@ package_group(
     define_oppia_aab_binary_flavor(flavor = flavor)
     for flavor in AVAILABLE_FLAVORS
 ]
+
+# RBE support
+
+platform(
+    name = "rbe_ubuntu1804_java11_platform",
+    exec_properties = {
+        "dockerNetwork": "standard",
+        "dockerPrivileged": "true",
+        "Pool": "testing",
+    },
+    parents = ["@rbe_ubuntu1804_java11//config:platform"],
+)
