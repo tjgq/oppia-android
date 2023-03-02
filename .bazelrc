@@ -19,6 +19,7 @@ build:linux --sandbox_tmpfs_path=/tmp
 
 # Work around Java issues in Oppia
 build --incompatible_java_common_parameters=false
+build --javacopt=-Xep:BoxedPrimitiveEquality:OFF
 
 # Work around singlejar incompatibility with RBE
 # https://cs.opensource.google/bazel/bazel/+/master:src/tools/singlejar/singlejar_main.cc;l=24
