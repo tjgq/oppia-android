@@ -136,3 +136,11 @@ package_group(
     define_oppia_aab_binary_flavor(flavor = flavor)
     for flavor in AVAILABLE_FLAVORS
 ]
+
+platform(
+  name = "xplat",
+  constraint_values = [
+    "@platforms//os:macos",
+    "@platforms//cpu:arm64",
+  ],
+)

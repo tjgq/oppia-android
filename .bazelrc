@@ -10,3 +10,24 @@ test --test_output=all
 # Work around https://github.com/bazelbuild/bazel/issues/3236
 common --enable_platform_specific_config
 build:linux --sandbox_tmpfs_path=/tmp
+
+# Turn off Error Prone since we don't pass some of the checks.
+build --javacopt=-XepDisableAllChecks
+
+# Work around
+build --incompatible_java_common_parameters=false
+
+# Work around https://github.com/bazelbuild/bazel/issues/12768
+build --strategy=Javac=sandboxed
+
+# Set up cross-platform remote cache.
+build --remote_instance_name=projects/bazel-untrusted/instances/default_instance
+build --remote_cache=grpcs://remotebuildexecution.googleapis.com
+build --remote_timeout=3600s
+build --remote_download_toplevel
+build --google_default_credentials
+build --platforms=//:xplat
+build --experimental_platform_in_output_dir
+build --experimental_remote_scrub_mnemonic_regex=.*
+build --experimental_remote_scrub_tool_inputs
+build --experimental_remote_scrub_salt=thiscanbreakeverything
